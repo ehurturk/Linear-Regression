@@ -42,11 +42,9 @@ class StockData:
         return cv
 
     def visualize(self, dates):
-        
-        x = [date for date in dates]
-        y = [dates[date]['4. close'] for date in x]
-        
-        plt.plot(x, y, 'o')
+        x = [date for date in dates][::-1]
+        y = [float(dates[date]['4. close']) for date in dates][::-1]
+        plt.plot(x, y)
         plt.xticks(rotation=45)
         plt.xlabel('Date')
         plt.ylabel('Stock Closing Value')
