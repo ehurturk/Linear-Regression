@@ -1,37 +1,49 @@
-import random
 import numpy as np
 
 
-class Regression:
-    def __init__(self, inputs):
-        self.weights = np.random.rand(1, len(inputs))
-        print(self.weights)
+class LinearRegression:
+    def __init__(self, x, y, w):
+        self.X = x
+        self.Y = y
+        self.W = w
 
-    def predict(self, input_):
+    def fit(self, a, n):
         '''
-            Returns the dot product of inputs and paramerers
-            p(xj) = w0x0 + w1x1 + w2x2 + ... + wNxN in which xj = a training ex.
-                                                             xji = i'th feature of the j'th training example
-        '''
-        prediction = 0
-        for i in range(0, len(self.weights)):
-            prediction += self.weights[i] * input_
-        return prediction
+        Parameters:
+        --------------
+        X: {array} A 2D m x n matrix. The first column of this must be 1 for all rows, as the feature x0 w
+    would equal 1, for the bias convention. This matrix is a example x feature matrix, which rows represent each training example and columns represent each feature.
+        Y: {array} A m x 1 vector. This vector represents the true labels for each training example.
+        W: {array} Th e weight matrix which must be 1 x X.shape[1].
+        a: {float} The learning rate which is responsible for controlling the gradient descent algorithm.
+        n: {int} The number of iterations
 
-class LinearRegression(Regression):
-    def __init__(self, inputs):
-        self.inputs = inputs
-        super().__init__(inputs)
-    def cost(self, true_labels):
-        '''
-            Formula: cost(weights) = 1/n * SUM((true label - predict(xi))**2)
-        '''
-        cost = 0
-        for i in range(0, len(self.inputs)):
-            cost += (true_labels[i] - self.predict(self.inputs[i])) ** 2
-        return cost/len(self.inputs)
+        Returns:
+        --------------
+        W: {array} An array containing weights of the each input feature.
 
-    def gradient_descent(self, epochs):
-        return NotImplementedError
+        Formula:
+        --------------
+        Iterative Way:
+            for n iterations:
+                wJ = wJ - a * 1/len(X.shape[0]) * sum((predicted value - true value * xij))
+
+        Matrixed Way:
+            for n iterations:
+                W = W - (a * 1/len(X.shape[0]) * )
+        '''
+        n_samples = len(self.Y)
+        costs = np.zeros((n, 1))
+
+        for i in range(n):
+            self.W = self.W - (a / n_samples) * self.X.transpose() @ (self.X @ self.W - self.Y)
+            costs[i] = self.mse()
+
+        return costs, self.W
+
+    def mse(self):
+        n_samples = self.X.shape[0]
+        h = self.X @ self.W
+        return (1 / (2 * n_samples)) * np.sum((h - self.Y) ** 2)
 
 
