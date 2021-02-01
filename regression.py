@@ -2,14 +2,16 @@ import numpy as np
 
 
 class LinearRegression:
-    def __init__(self, x, y, w):
+    def __init__(self, x, y):
         self.X = x
-        self.Y = y
-        self.W = w
+        self.Y = y.reshape(-1, 1)
+        self.W = None
+        self.b = None
+        self.costs = []
 
     def fit(self, a, n):
         '''
-        Parameters:
+        Parameters:\n
         --------------
         X: {array} A 2D m x n matrix. The first column of this must be 1 for all rows, as the feature x0 w
     would equal 1, for the bias convention. This matrix is a example x feature matrix, which rows represent each training example and columns represent each feature.
@@ -18,32 +20,33 @@ class LinearRegression:
         a: {float} The learning rate which is responsible for controlling the gradient descent algorithm.
         n: {int} The number of iterations
 
-        Returns:
+        Returns:\n
         --------------
         W: {array} An array containing weights of the each input feature.
 
-        Formula:
+        Formula:\n
         --------------
-        Iterative Way:
-            for n iterations:
-                wJ = wJ - a * 1/len(X.shape[0]) * sum((predicted value - true value * xij))
-
-        Matrixed Way:
-            for n iterations:
-                W = W - (a * 1/len(X.shape[0]) * )
+        for n iterations:\n
+            W = W - (a * (1/X.shape[0]) * (X.dot(W.T)-real).dot(X)
+        \n
+        \n
         '''
-        n_samples = len(self.Y)
-        costs = np.zeros((n, 1))
-
+        self.W = np.zeros(self.X.shape[1])
+        self.b = 0
+        
         for i in range(n):
-            self.W = self.W - (a / n_samples) * self.X.transpose() @ (self.X @ self.W - self.Y)
-            costs[i] = self.mse()
+            predictions = np.dot(self.X, self.W) + self.b
+            deltaW = (a / self.X.shape[0]) * np.dot(self.X.T,(predictions - self.Y)) # for some reason shape deltaW is 2,80
+            deltaB = (a / self.X.shape[0]) * np.sum(predictions - self.Y)
+            self.W = self.W - deltaW
+            self.b = self.b - deltaB
+            self.costs.append(self.mse(self.Y, predictions))
+        return self
 
-        return costs, self.W
+    def mse(self, true, pred):
+        return np.mean((true - pred) ** 2)
 
-    def mse(self):
-        n_samples = self.X.shape[0]
-        h = self.X @ self.W
-        return (1 / (2 * n_samples)) * np.sum((h - self.Y) ** 2)
+    def predict(self, test_data):
+        return np.dot(test_data, self.W) + self.b
 
 
