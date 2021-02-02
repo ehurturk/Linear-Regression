@@ -11,7 +11,7 @@ class LinearRegression:
 
     def fit(self, a, n):
         '''
-        Parameters:\n
+        Parameters:
         --------------
         X: {array} A 2D m x n matrix. The first column of this must be 1 for all rows, as the feature x0 w
     would equal 1, for the bias convention. This matrix is a example x feature matrix, which rows represent each training example and columns represent each feature.
@@ -20,16 +20,14 @@ class LinearRegression:
         a: {float} The learning rate which is responsible for controlling the gradient descent algorithm.
         n: {int} The number of iterations
 
-        Returns:\n
+        Returns:
         --------------
         W: {array} An array containing weights of the each input feature.
 
-        Formula:\n
+        Formula:
         --------------
-        for n iterations:\n
+        for n iterations:
             W = W - (a * (1/X.shape[0]) * (X.dot(W.T)-real).dot(X)
-        \n
-        \n
         '''
         self.W = np.zeros(self.X.shape[1])
         self.b = 0
