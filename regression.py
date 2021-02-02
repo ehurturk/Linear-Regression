@@ -4,7 +4,7 @@ import numpy as np
 class LinearRegression:
     def __init__(self, x, y):
         self.X = x
-        self.Y = y.reshape(-1, 1)
+        self.Y = y
         self.W = None
         self.b = None
         self.costs = []
@@ -48,5 +48,12 @@ class LinearRegression:
 
     def predict(self, test_data):
         return np.dot(test_data, self.W) + self.b
+
+    def graph(self, xy):
+        result = 0
+        for i in range(self.W.shape[0]):
+            result = result + self.W[i] * xy[i]
+
+        return result + self.b
 
 
